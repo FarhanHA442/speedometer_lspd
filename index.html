@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LSPD Police Speedometer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    
+    <div class="speedo-container">
+        <div class="speedo-dial">
+            
+            <div class="strobes">
+                <div class="strobe left" id="strobe-l"></div>
+                <div class="strobe right" id="strobe-r"></div>
+            </div>
+
+            <div class="lspd-logo-bg"></div>
+
+            <div class="marks">
+                <span class="mark m0">0</span>
+                <span class="mark m20">20</span>
+                <span class="mark m40">40</span>
+                <span class="mark m60">60</span>
+                <span class="mark m80">80</span>
+                <span class="mark m100">100</span>
+                <span class="mark m120">120</span>
+                <span class="mark m140">140</span>
+                <span class="mark m160">160</span>
+            </div>
+
+            <div class="needle-container" id="needle">
+                <div class="needle-hand"></div>
+            </div>
+
+            <div class="needle-center"></div>
+
+            <div class="digital-hud">
+                
+                <div class="upper-icons">
+                    <span class="icon" id="icon-engine">⚙️</span>
+                    <span class="icon" id="icon-lock">🔒</span>
+                    <span class="icon" id="icon-seatbelt">💺</span>
+                    <span class="icon" id="icon-handbrake">🅿️</span>
+                </div>
+
+                <div class="top-icons">
+                    <span class="icon" id="icon-ind-l">⬅️</span>
+                    <span class="icon" id="icon-lights">💡</span>
+                    <span class="icon" id="icon-ind-r">➡️</span>
+                </div>
+
+                <div class="main-digital">
+                    <span id="digital-speed">0</span>
+                    <div class="sub-info">
+                        <span id="speed-unit">KMH</span>
+                        <span id="gear">N</span>
+                    </div>
+                    <div class="rpm-bg"><div class="rpm-fill" id="rpm-bar"></div></div>
+                </div>
+
+                <div class="bottom-status">
+                    <div class="bar-group fuel-group">
+                        <span class="label">FUEL</span>
+                        <div class="bar-stack">
+                            <div class="bar-bg"><div class="bar-fill" id="fuel-bar"></div></div>
+                            <span class="bar-val" id="fuel-val">0%</span>
+                        </div>
+                    </div>
+                    <div class="bar-group health-group">
+                        <div class="bar-stack">
+                            <div class="bar-bg"><div class="bar-fill health" id="health-bar"></div></div>
+                            <span class="bar-val" id="health-val">0%</span>
+                        </div>
+                        <span class="label">HP</span>
+                    </div>
+                </div>
+                
+                <div class="odo-text" id="odometer">0.0 mi</div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

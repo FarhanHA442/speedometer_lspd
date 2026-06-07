@@ -119,10 +119,21 @@ function setOdometer(distance) {
     elements.odometer.innerText = distance.toFixed(1) + ' mi';
 }
 
-// 12. VEHICLE LOCK
+// 12. VEHICLE LOCK (Fungsi Asli Kita)
 function setVehicleLock(state) {
     setIconState(elements.lock, state);
 }
+
+// --- TRIK JARING PENANGKAP: Bikin banyak nama fungsi yang mengarah ke setVehicleLock ---
+// Siapa tahu server JGVRP memanggil salah satu dari nama-nama di bawah ini:
+function setLock(state) { setVehicleLock(state); }
+function updateLock(state) { setVehicleLock(state); }
+function setLocked(state) { setVehicleLock(state); }
+function toggleLock(state) { setVehicleLock(state); }
+function UpdateVehicleLock(state) { setVehicleLock(state); }
+function setVehicleLocked(state) { setVehicleLock(state); }
+function updateVehicleLockStatus(state) { setVehicleLock(state); }
+function lock(state) { setVehicleLock(state); }
 
 // 13. HANDBRAKE / REM TANGAN
 function setHandbrake(state) {

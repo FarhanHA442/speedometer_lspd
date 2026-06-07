@@ -1,16 +1,15 @@
 let elements = {};
 let speedMode = 1;
 let indicators = 0;
-let isEngineOn = false; // Variabel untuk mengingat status mesin sebenarnya
+let isEngineOn = false;
 
 function setIconState(element, state) {
     if(state) element.classList.add('active');
     else element.classList.remove('active');
 }
 
-// 1. ENGINE (Efek Nyala/Mati Pencahayaan Dasbor)
 function setEngine(state) {
-    isEngineOn = state; // Simpan status aslinya
+    isEngineOn = state;
     if (state) {
         elements.dial.classList.add('engine-on');
         elements.dial.classList.remove('engine-off');
@@ -20,7 +19,6 @@ function setEngine(state) {
     }
 }
 
-// 2. SPEED
 function setSpeed(speed) {
     let speedVal, unitText, maxSpeedVisual;
     switch(speedMode) {
@@ -38,12 +36,10 @@ function setSpeed(speed) {
     elements.needle.style.transform = `rotate(${needleAngle}deg)`;
 }
 
-// 3. RPM BAR
 function setRPM(rpm) {
     elements.rpmBar.style.width = `${(rpm * 100)}%`;
 }
 
-// 4. FUEL (Warna dinamis per 10%)
 function setFuel(fuel) {
     let fuelPercent = Math.round(fuel * 100);
     elements.fuelBar.style.width = `${fuelPercent}%`;
@@ -61,7 +57,6 @@ function setFuel(fuel) {
     else { elements.fuelBar.style.background = '#ff0000'; }
 }
 
-// 5. HEALTH BAR
 function setHealth(health) {
     let healthPercent = Math.round(health * 100);
     elements.healthBar.style.width = `${healthPercent}%`;
@@ -72,7 +67,6 @@ function setHealth(health) {
     else { elements.healthBar.style.background = '#ff0000'; }
 }
 
-// 6. GEAR
 function setGear(gear) {
     let gearText = 'N';
     if (gear === 0) gearText = 'R';
@@ -80,13 +74,11 @@ function setGear(gear) {
     elements.gear.innerText = gearText;
 }
 
-// 7. LIGHTS
 function setHeadlights(state) {
     elements.headlights.classList.remove('active');
     if (state > 0) elements.headlights.classList.add('active');
 }
 
-// 8. INDICATORS
 function setLeftIndicator(state) {
     indicators = (indicators & 0b10) | (state ? 0b01 : 0b00);
     setIconState(elements.indL, state);
@@ -96,50 +88,39 @@ function setRightIndicator(state) {
     setIconState(elements.indR, state);
 }
 
-// 9. SEATBELT
 function setSeatbelts(state) {
     setIconState(elements.seatbelt, state);
 }
 
-// 10. SPEED MODE
 function setSpeedMode(mode) {
     speedMode = mode;
 }
 
-// 11. ODOMETER
 function setOdometer(distance) {
     elements.odometer.innerText = distance.toFixed(1) + ' mi';
 }
 
-// --- ANIMASI SAAT BARU MASUK KENDARAAN (GAUGE SWEEP) ---
 function playStartupAnimation() {
-    // 1. Paksa lampu dasbor menyala terang saat kalibrasi
     elements.dial.classList.add('engine-on');
     elements.dial.classList.remove('engine-off');
 
-    // 2. Transisi diperlambat untuk animasi jarum
     elements.needle.style.transition = 'transform 0.8s ease-in-out';
     elements.rpmBar.style.transition = 'width 0.8s ease-in-out';
     
-    // 3. Sweep jarum dan RPM ke full
     elements.needle.style.transform = `rotate(120deg)`; 
     elements.rpmBar.style.width = '100%';
     
-    // 4. Nyalakan semua lampu sein, sabuk, dll
     let allIcons = document.querySelectorAll('.icon');
     allIcons.forEach(icon => icon.classList.add('active'));
 
-    // Kembalikan ke normal setelah 0.8 detik
     setTimeout(() => {
         elements.needle.style.transform = `rotate(-120deg)`; 
         elements.rpmBar.style.width = '0%';
         
         allIcons.forEach(icon => icon.classList.remove('active'));
         
-        // Kembalikan status lampu dasbor ke status mesin yang aslinya (nyala/mati)
         setEngine(isEngineOn);
         
-        // Kembalikan transisi kecepatan jarum jadi cepat dan responsif lagi
         setTimeout(() => {
             elements.needle.style.transition = 'transform 0.1s linear';
             elements.rpmBar.style.transition = 'width 0.1s linear';
@@ -147,10 +128,9 @@ function playStartupAnimation() {
     }, 800);
 }
 
-// DOM Binding
 document.addEventListener('DOMContentLoaded', () => {
     elements = {
-        dial: document.querySelector('.speedo-dial'), // <-- Bind untuk keseluruhan layar dial
+        dial: document.querySelector('.speedo-dial'),
         needle: document.getElementById('needle'),
         digSpeed: document.getElementById('digital-speed'),
         speedUnit: document.getElementById('speed-unit'),
@@ -170,6 +150,5 @@ document.addEventListener('DOMContentLoaded', () => {
         odometer: document.getElementById('odometer'),
     };
 
-    // Jalankan animasi saat UI dimuat (saat masuk mobil)
     setTimeout(playStartupAnimation, 200);
 });

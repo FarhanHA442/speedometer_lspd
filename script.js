@@ -1,15 +1,23 @@
 let elements = {};
 let speedMode = 1;
 let indicators = 0;
+let isEngineOn = false; // Variabel untuk mengingat status mesin sebenarnya
 
 function setIconState(element, state) {
     if(state) element.classList.add('active');
     else element.classList.remove('active');
 }
 
-// 1. ENGINE
+// 1. ENGINE (Efek Nyala/Mati Pencahayaan Dasbor)
 function setEngine(state) {
-    setIconState(elements.engine, state);
+    isEngineOn = state; // Simpan status aslinya
+    if (state) {
+        elements.dial.classList.add('engine-on');
+        elements.dial.classList.remove('engine-off');
+    } else {
+        elements.dial.classList.add('engine-off');
+        elements.dial.classList.remove('engine-on');
+    }
 }
 
 // 2. SPEED
@@ -41,28 +49,16 @@ function setFuel(fuel) {
     elements.fuelBar.style.width = `${fuelPercent}%`;
     elements.fuelVal.innerText = `${fuelPercent}%`;
 
-    // Mengubah warna bar berdasarkan persentase (setiap turun 10%)
-    if (fuelPercent >= 90) {
-        elements.fuelBar.style.background = '#00ff00'; // 90-100% (Hijau)
-    } else if (fuelPercent >= 80) {
-        elements.fuelBar.style.background = '#32cd32'; // 80-89% (Hijau Muda)
-    } else if (fuelPercent >= 70) {
-        elements.fuelBar.style.background = '#7fff00'; // 70-79% (Hijau Kekuningan)
-    } else if (fuelPercent >= 60) {
-        elements.fuelBar.style.background = '#adff2f'; // 60-69% (Kuning Kehijauan)
-    } else if (fuelPercent >= 50) {
-        elements.fuelBar.style.background = '#ffff00'; // 50-59% (Kuning)
-    } else if (fuelPercent >= 40) {
-        elements.fuelBar.style.background = '#ffd700'; // 40-49% (Emas)
-    } else if (fuelPercent >= 30) {
-        elements.fuelBar.style.background = '#ffa500'; // 30-39% (Oranye)
-    } else if (fuelPercent >= 20) {
-        elements.fuelBar.style.background = '#ff8c00'; // 20-29% (Oranye Tua)
-    } else if (fuelPercent >= 10) {
-        elements.fuelBar.style.background = '#ff4500'; // 10-19% (Merah Oranye)
-    } else {
-        elements.fuelBar.style.background = '#ff0000'; // 0-9% (Merah Kritis)
-    }
+    if (fuelPercent >= 90) { elements.fuelBar.style.background = '#00ff00'; } 
+    else if (fuelPercent >= 80) { elements.fuelBar.style.background = '#32cd32'; } 
+    else if (fuelPercent >= 70) { elements.fuelBar.style.background = '#7fff00'; } 
+    else if (fuelPercent >= 60) { elements.fuelBar.style.background = '#adff2f'; } 
+    else if (fuelPercent >= 50) { elements.fuelBar.style.background = '#ffff00'; } 
+    else if (fuelPercent >= 40) { elements.fuelBar.style.background = '#ffd700'; } 
+    else if (fuelPercent >= 30) { elements.fuelBar.style.background = '#ffa500'; } 
+    else if (fuelPercent >= 20) { elements.fuelBar.style.background = '#ff8c00'; } 
+    else if (fuelPercent >= 10) { elements.fuelBar.style.background = '#ff4500'; } 
+    else { elements.fuelBar.style.background = '#ff0000'; }
 }
 
 // 5. HEALTH BAR
@@ -71,13 +67,9 @@ function setHealth(health) {
     elements.healthBar.style.width = `${healthPercent}%`;
     elements.healthVal.innerText = `${healthPercent}%`;
     
-    if(health > 0.6) {
-        elements.healthBar.style.background = '#00ff00'; 
-    } else if(health > 0.3) {
-        elements.healthBar.style.background = '#ffff00'; 
-    } else {
-        elements.healthBar.style.background = '#ff0000'; 
-    }
+    if(health > 0.6) { elements.healthBar.style.background = '#00ff00'; } 
+    else if(health > 0.3) { elements.healthBar.style.background = '#ffff00'; } 
+    else { elements.healthBar.style.background = '#ff0000'; }
 }
 
 // 6. GEAR
@@ -119,64 +111,35 @@ function setOdometer(distance) {
     elements.odometer.innerText = distance.toFixed(1) + ' mi';
 }
 
-// 12. VEHICLE LOCK (Fungsi Asli Kita)
-function setVehicleLock(state) {
-    setIconState(elements.lock, state);
-}
-
-// --- TRIK JARING PENANGKAP: Bikin banyak nama fungsi yang mengarah ke setVehicleLock ---
-// Siapa tahu server JGVRP memanggil salah satu dari nama-nama di bawah ini:
-function setLock(state) { setVehicleLock(state); }
-function updateLock(state) { setVehicleLock(state); }
-function setLocked(state) { setVehicleLock(state); }
-function toggleLock(state) { setVehicleLock(state); }
-function UpdateVehicleLock(state) { setVehicleLock(state); }
-function setVehicleLocked(state) { setVehicleLock(state); }
-function updateVehicleLockStatus(state) { setVehicleLock(state); }
-function lock(state) { setVehicleLock(state); }
-
-// 13. HANDBRAKE / REM TANGAN
-function setHandbrake(state) {
-    setIconState(elements.handbrake, state);
-}
-
-// 14. POLICE SIREN / STROBE
-function setSiren(state) {
-    if(state) {
-        elements.strobeL.classList.add('active');
-        elements.strobeR.classList.add('active');
-    } else {
-        elements.strobeL.classList.remove('active');
-        elements.strobeR.classList.remove('active');
-    }
-}
-
 // --- ANIMASI SAAT BARU MASUK KENDARAAN (GAUGE SWEEP) ---
 function playStartupAnimation() {
-    // Transisi diperlambat untuk animasi
+    // 1. Paksa lampu dasbor menyala terang saat kalibrasi
+    elements.dial.classList.add('engine-on');
+    elements.dial.classList.remove('engine-off');
+
+    // 2. Transisi diperlambat untuk animasi jarum
     elements.needle.style.transition = 'transform 0.8s ease-in-out';
     elements.rpmBar.style.transition = 'width 0.8s ease-in-out';
     
-    // Sweep jarum dan RPM ke full
+    // 3. Sweep jarum dan RPM ke full
     elements.needle.style.transform = `rotate(120deg)`; 
     elements.rpmBar.style.width = '100%';
     
-    // Nyalakan semua lampu
+    // 4. Nyalakan semua lampu sein, sabuk, dll
     let allIcons = document.querySelectorAll('.icon');
     allIcons.forEach(icon => icon.classList.add('active'));
-    elements.strobeL.classList.add('active');
-    elements.strobeR.classList.add('active');
 
-    // Kembalikan ke nol setelah 0.8 detik
+    // Kembalikan ke normal setelah 0.8 detik
     setTimeout(() => {
         elements.needle.style.transform = `rotate(-120deg)`; 
         elements.rpmBar.style.width = '0%';
         
         allIcons.forEach(icon => icon.classList.remove('active'));
-        elements.strobeL.classList.remove('active');
-        elements.strobeR.classList.remove('active');
         
-        // Kembalikan transisi ke cepat (normal) setelah animasi selesai
+        // Kembalikan status lampu dasbor ke status mesin yang aslinya (nyala/mati)
+        setEngine(isEngineOn);
+        
+        // Kembalikan transisi kecepatan jarum jadi cepat dan responsif lagi
         setTimeout(() => {
             elements.needle.style.transition = 'transform 0.1s linear';
             elements.rpmBar.style.transition = 'width 0.1s linear';
@@ -187,6 +150,7 @@ function playStartupAnimation() {
 // DOM Binding
 document.addEventListener('DOMContentLoaded', () => {
     elements = {
+        dial: document.querySelector('.speedo-dial'), // <-- Bind untuk keseluruhan layar dial
         needle: document.getElementById('needle'),
         digSpeed: document.getElementById('digital-speed'),
         speedUnit: document.getElementById('speed-unit'),
@@ -198,16 +162,10 @@ document.addEventListener('DOMContentLoaded', () => {
         healthVal: document.getElementById('health-val'), 
         rpmBar: document.getElementById('rpm-bar'),       
         
-        engine: document.getElementById('icon-engine'),   
         headlights: document.getElementById('icon-lights'),
         indL: document.getElementById('icon-ind-l'),
         indR: document.getElementById('icon-ind-r'),
         seatbelt: document.getElementById('icon-seatbelt'),
-        lock: document.getElementById('icon-lock'),
-        handbrake: document.getElementById('icon-handbrake'), 
-        
-        strobeL: document.getElementById('strobe-l'),
-        strobeR: document.getElementById('strobe-r'),
         
         odometer: document.getElementById('odometer'),
     };

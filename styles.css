@@ -33,8 +33,23 @@ body {
     background: radial-gradient(circle, #1a1c20 0%, #000000 100%);
     border: 8px solid #333; 
     border-radius: 50%;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.8), inset 0 0 20px rgba(0,0,0,0.5);
     overflow: hidden;
+    transition: box-shadow 0.6s ease, filter 0.6s ease;
+}
+
+/* --- EFEK LAMPU MESIN NYALA --- */
+.speedo-dial.engine-on {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.8),
+                0 0 20px rgba(0, 136, 255, 0.4),
+                inset 0 0 35px rgba(0, 136, 255, 0.3);
+    filter: brightness(1.0); 
+}
+
+/* --- EFEK LAMPU MESIN MATI --- */
+.speedo-dial.engine-off {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.8),
+                inset 0 0 60px rgba(0,0,0,0.9); 
+    filter: brightness(0.4); 
 }
 
 .lspd-logo-bg {
@@ -51,33 +66,6 @@ body {
     border-radius: 50%;
     z-index: 0;
 }
-
-/* --- Strobo Polisi 🚨 --- */
-.strobes {
-    position: absolute;
-    top: 25px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 55%;
-    display: flex;
-    justify-content: space-between;
-    z-index: 2;
-}
-.strobe {
-    width: 15px; height: 5px;
-    border-radius: 3px;
-    opacity: 0.05;
-}
-.strobe.left.active {
-    background: #ff0000; box-shadow: 0 0 15px #ff0000;
-    animation: flashLeft 0.4s infinite alternate;
-}
-.strobe.right.active {
-    background: #0088ff; box-shadow: 0 0 15px #0088ff;
-    animation: flashRight 0.4s infinite alternate;
-}
-@keyframes flashLeft { 0%, 40% { opacity: 0.1; } 50%, 100% { opacity: 1; } }
-@keyframes flashRight { 0%, 40% { opacity: 1; } 50%, 100% { opacity: 0.1; } }
 
 /* Angka-angka */
 .marks .mark {
@@ -120,16 +108,10 @@ body {
     z-index: 5; pointer-events: none; 
 }
 
-/* Ikon Tambahan (Atas Jarum) */
-.upper-icons {
-    position: absolute; top: 105px; left: 50%; transform: translateX(-50%);
-    display: flex; gap: 15px; font-size: 0.9rem;
-}
-
-/* Sein & Lampu Atas */
+/* Sein, Seatbelt, Lampu Atas */
 .top-icons {
     position: absolute; top: 70px; left: 50%; transform: translateX(-50%);
-    display: flex; gap: 30px; font-size: 1.1rem;
+    display: flex; align-items: center; gap: 20px; 
 }
 
 /* Speed, Gear & RPM Utama (Di Bawah Jarum) */
@@ -139,13 +121,13 @@ body {
     text-align: center; line-height: 1; width: 100%;
 }
 
-/* Font speed diperkecil sedikit agar tidak mendesak ke bawah */
+/* Font speed */
 #digital-speed { font-size: 38px; font-weight: 900; font-family: 'Monaco', monospace; margin-bottom: 2px; }
 .sub-info { display: flex; justify-content: center; gap: 8px; margin-bottom: 6px; }
 #speed-unit { font-size: 12px; color: #aaa; font-weight: bold; }
 #gear { font-size: 16px; color: #ffcc00; font-weight: bold; }
 
-/* RPM Bar (Duduk pas di tengah) */
+/* RPM Bar */
 .rpm-bg {
     width: 50px; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden;
 }
@@ -153,14 +135,21 @@ body {
     width: 0%; height: 100%; background: #00ffff; transition: width 0.1s linear;
 }
 
-/* Fuel dan Health Bawah (Disebar ke kiri dan kanan) */
+/* Fuel dan Health Bawah */
 .bottom-status {
     position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%);
     display: flex; justify-content: space-between; 
     align-items: flex-start; width: 165px; 
 }
 .bar-group { display: flex; align-items: flex-start; gap: 4px; }
-.bar-group .label { font-size: 9px; font-weight: bold; color: #aaa; line-height: 1; margin-top: -1px; }
+.bar-group .label { 
+    font-size: 9px; 
+    font-weight: bold; 
+    color: #ffffff; 
+    line-height: 1; 
+    margin-top: -1px; 
+    text-shadow: 0 0 3px rgba(0,0,0,0.8); 
+}
 
 /* Tumpukan Bar dan Angka Digital */
 .bar-stack { display: flex; flex-direction: column; align-items: center; gap: 2px; }
@@ -171,8 +160,6 @@ body {
 .bar-fill {
     width: 100%; height: 100%; transition: width 0.3s ease, background 0.3s ease;
 }
-.bar-fill#fuel-bar { background: #ffaa00; }
-.bar-fill#health-bar { background: #00ff00; }
 
 /* Angka Digital di bawah bar */
 .bar-val { 
@@ -183,18 +170,19 @@ body {
     margin-top: 2px; 
 }
 
-/* Odometer (Paling Bawah) */
+/* Odometer */
 .odo-text {
     position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%);
     font-size: 10px; color: #777; width: 100%; text-align: center;
 }
 
-/* State Ikon Aktif */
-.icon { opacity: 0.15; transition: opacity 0.2s; }
-.icon.active { opacity: 1; text-shadow: 0 0 10px white; }
-#icon-engine.active { color: #ffaa00; } 
-#icon-handbrake.active { color: #ff4444; } 
-#icon-lights.active { color: #00aaff; } 
-#icon-seatbelt.active { color: #ff4444; } 
-#icon-ind-l.active, #icon-ind-r.active { color: #00ff00; animation: blink 0.5s infinite; }
+/* State Ikon Aktif (Perubahan Warna Di Sini) */
+.icon { 
+    opacity: 0.15; transition: opacity 0.2s, color 0.2s; 
+    display: flex; align-items: center; justify-content: center;
+}
+.icon.active { opacity: 1; filter: drop-shadow(0 0 5px currentColor); }
+#icon-lights.active { color: #00aaff; } /* Biru untuk lampu utama */
+#icon-seatbelt.active { color: #00ff00; } /* Hijau terang untuk seatbelt */
+#icon-ind-l.active, #icon-ind-r.active { color: #ffaa00; animation: blink 0.5s infinite; } /* Oranye (amber) untuk sein */
 @keyframes blink { 50% { opacity: 0.1; } }

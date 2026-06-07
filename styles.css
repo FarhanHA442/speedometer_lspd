@@ -17,6 +17,13 @@ body {
     right: 20px;
     width: 300px;
     height: 300px;
+    opacity: 0; 
+    animation: slideUpFade 0.8s ease-out forwards;
+}
+
+@keyframes slideUpFade {
+    0% { opacity: 0; transform: translateY(50px); }
+    100% { opacity: 1; transform: translateY(0); }
 }
 
 .speedo-dial {
@@ -148,9 +155,9 @@ body {
 
 /* Fuel dan Health Bawah (Disebar ke kiri dan kanan) */
 .bottom-status {
-    position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
-    display: flex; justify-content: space-between; /* Menarik Fuel ke kiri, HP ke kanan */
-    align-items: flex-start; width: 155px; /* Dilebarkan agar muat mengapit RPM di tengah */
+    position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%);
+    display: flex; justify-content: space-between; 
+    align-items: flex-start; width: 165px; 
 }
 .bar-group { display: flex; align-items: flex-start; gap: 4px; }
 .bar-group .label { font-size: 9px; font-weight: bold; color: #aaa; line-height: 1; margin-top: -1px; }
@@ -158,7 +165,7 @@ body {
 /* Tumpukan Bar dan Angka Digital */
 .bar-stack { display: flex; flex-direction: column; align-items: center; gap: 2px; }
 .bar-group .bar-bg {
-    width: 32px; height: 5px; /* Bar dipendekkan sedikit agar rapi */
+    width: 32px; height: 5px; 
     background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden;
 }
 .bar-fill {
@@ -168,11 +175,17 @@ body {
 .bar-fill#health-bar { background: #00ff00; }
 
 /* Angka Digital di bawah bar */
-.bar-val { font-size: 9px; font-weight: bold; color: #ddd; font-family: 'Monaco', monospace; }
+.bar-val { 
+    font-size: 17px; 
+    font-weight: bold; 
+    color: #ddd; 
+    font-family: 'Monaco', monospace; 
+    margin-top: 2px; 
+}
 
 /* Odometer (Paling Bawah) */
 .odo-text {
-    position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+    position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%);
     font-size: 10px; color: #777; width: 100%; text-align: center;
 }
 

@@ -37,7 +37,6 @@ function setRPM(rpm) {
 
 // 4. FUEL
 function setFuel(fuel) {
-    // Memperbarui ukuran bar dan angka persentase di bawahnya
     let fuelPercent = Math.round(fuel * 100);
     elements.fuelBar.style.width = `${fuelPercent}%`;
     elements.fuelVal.innerText = `${fuelPercent}%`;
@@ -45,18 +44,16 @@ function setFuel(fuel) {
 
 // 5. HEALTH BAR
 function setHealth(health) {
-    // Memperbarui ukuran bar dan angka persentase di bawahnya
     let healthPercent = Math.round(health * 100);
     elements.healthBar.style.width = `${healthPercent}%`;
     elements.healthVal.innerText = `${healthPercent}%`;
     
-    // Warna otomatis berubah sesuai kondisi mobil
     if(health > 0.6) {
-        elements.healthBar.style.background = '#00ff00'; // Hijau
+        elements.healthBar.style.background = '#00ff00'; 
     } else if(health > 0.3) {
-        elements.healthBar.style.background = '#ffff00'; // Kuning
+        elements.healthBar.style.background = '#ffff00'; 
     } else {
-        elements.healthBar.style.background = '#ff0000'; // Merah
+        elements.healthBar.style.background = '#ff0000'; 
     }
 }
 
@@ -120,6 +117,39 @@ function setSiren(state) {
     }
 }
 
+// --- ANIMASI SAAT BARU MASUK KENDARAAN (GAUGE SWEEP) ---
+function playStartupAnimation() {
+    // Transisi diperlambat untuk animasi
+    elements.needle.style.transition = 'transform 0.8s ease-in-out';
+    elements.rpmBar.style.transition = 'width 0.8s ease-in-out';
+    
+    // Sweep jarum dan RPM ke full
+    elements.needle.style.transform = `rotate(120deg)`; 
+    elements.rpmBar.style.width = '100%';
+    
+    // Nyalakan semua lampu
+    let allIcons = document.querySelectorAll('.icon');
+    allIcons.forEach(icon => icon.classList.add('active'));
+    elements.strobeL.classList.add('active');
+    elements.strobeR.classList.add('active');
+
+    // Kembalikan ke nol setelah 0.8 detik
+    setTimeout(() => {
+        elements.needle.style.transform = `rotate(-120deg)`; 
+        elements.rpmBar.style.width = '0%';
+        
+        allIcons.forEach(icon => icon.classList.remove('active'));
+        elements.strobeL.classList.remove('active');
+        elements.strobeR.classList.remove('active');
+        
+        // Kembalikan transisi ke cepat (normal) setelah animasi selesai
+        setTimeout(() => {
+            elements.needle.style.transition = 'transform 0.1s linear';
+            elements.rpmBar.style.transition = 'width 0.1s linear';
+        }, 800);
+    }, 800);
+}
+
 // DOM Binding
 document.addEventListener('DOMContentLoaded', () => {
     elements = {
@@ -128,14 +158,12 @@ document.addEventListener('DOMContentLoaded', () => {
         speedUnit: document.getElementById('speed-unit'),
         gear: document.getElementById('gear'),
         
-        // Bar dan Text Value Bawah
         fuelBar: document.getElementById('fuel-bar'),
-        fuelVal: document.getElementById('fuel-val'),     // Baru
+        fuelVal: document.getElementById('fuel-val'),     
         healthBar: document.getElementById('health-bar'), 
-        healthVal: document.getElementById('health-val'), // Baru
+        healthVal: document.getElementById('health-val'), 
         rpmBar: document.getElementById('rpm-bar'),       
         
-        // Ikon
         engine: document.getElementById('icon-engine'),   
         headlights: document.getElementById('icon-lights'),
         indL: document.getElementById('icon-ind-l'),
@@ -144,10 +172,12 @@ document.addEventListener('DOMContentLoaded', () => {
         lock: document.getElementById('icon-lock'),
         handbrake: document.getElementById('icon-handbrake'), 
         
-        // Strobo LSPD
         strobeL: document.getElementById('strobe-l'),
         strobeR: document.getElementById('strobe-r'),
         
         odometer: document.getElementById('odometer'),
     };
+
+    // Jalankan animasi saat UI dimuat (saat masuk mobil)
+    setTimeout(playStartupAnimation, 200);
 });

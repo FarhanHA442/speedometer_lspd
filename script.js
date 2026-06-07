@@ -35,11 +35,34 @@ function setRPM(rpm) {
     elements.rpmBar.style.width = `${(rpm * 100)}%`;
 }
 
-// 4. FUEL
+// 4. FUEL (Warna dinamis per 10%)
 function setFuel(fuel) {
     let fuelPercent = Math.round(fuel * 100);
     elements.fuelBar.style.width = `${fuelPercent}%`;
     elements.fuelVal.innerText = `${fuelPercent}%`;
+
+    // Mengubah warna bar berdasarkan persentase (setiap turun 10%)
+    if (fuelPercent >= 90) {
+        elements.fuelBar.style.background = '#00ff00'; // 90-100% (Hijau)
+    } else if (fuelPercent >= 80) {
+        elements.fuelBar.style.background = '#32cd32'; // 80-89% (Hijau Muda)
+    } else if (fuelPercent >= 70) {
+        elements.fuelBar.style.background = '#7fff00'; // 70-79% (Hijau Kekuningan)
+    } else if (fuelPercent >= 60) {
+        elements.fuelBar.style.background = '#adff2f'; // 60-69% (Kuning Kehijauan)
+    } else if (fuelPercent >= 50) {
+        elements.fuelBar.style.background = '#ffff00'; // 50-59% (Kuning)
+    } else if (fuelPercent >= 40) {
+        elements.fuelBar.style.background = '#ffd700'; // 40-49% (Emas)
+    } else if (fuelPercent >= 30) {
+        elements.fuelBar.style.background = '#ffa500'; // 30-39% (Oranye)
+    } else if (fuelPercent >= 20) {
+        elements.fuelBar.style.background = '#ff8c00'; // 20-29% (Oranye Tua)
+    } else if (fuelPercent >= 10) {
+        elements.fuelBar.style.background = '#ff4500'; // 10-19% (Merah Oranye)
+    } else {
+        elements.fuelBar.style.background = '#ff0000'; // 0-9% (Merah Kritis)
+    }
 }
 
 // 5. HEALTH BAR
